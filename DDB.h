@@ -40,6 +40,7 @@ class DDayBook
 	int List();
 	void List_short();
 	void Out1(Note T, int k);
+	void ShowDate(Note T);
 	int Add_new_mult();
 	int clear_file();
 	void OutN1(Note No);

@@ -30,9 +30,9 @@ DDayBook::DDayBook ()
 void DDayBook::line(int x)
 {
     if (x == 1)
-    	cout << setw(130) << " " << setfill('-') << endl;
+    	cout << setw(130) << setfill('-') << " " << endl;
     else
-        cout << endl << setw(130) << " " << setfill('=') << endl;
+        cout << endl << setw(130) << setfill('=') << " " << endl;
 	setw(0);
 	setfill(' ');
 	return;
@@ -48,11 +48,11 @@ int DDayBook::List()
 	int k=0, r;
 	fseek(f_Daybook, 0, 0); 
 	cout<<"Here is all your tasks: \n";
+	line(2);
 	while (!feof(f_Daybook)) 
 	{
 		r=fread(&T, sizeof(T), 1, f_Daybook);
         if (r < 1) break;
-        line(2);
 		Out1(T, k);
 		line(1);
 		k++;
@@ -68,14 +68,13 @@ void DDayBook::List_short()
 	int r, k;
 	fseek(f_Daybook, 0, 0);
 	cout << "Here`s a short list of your tasks \n";
+	cout << setw(3) << setfill(' ') << right << "#" << setw(1) << "." << setw(3) << " | " <<  setw(24) << left << " Name:" <<  setw(3) << " | " << setw(20) << "Time of start:" <<  setw(3) << " | " << setw(15) << "Durability:" <<  setw(3) << " | " << setw(11) << "Priority:" << setw(3) << " | " << setw(9) << "Status:";
+	line(2);
 	while (!feof(f_Daybook)) 
 	{
 		r=fread(&T, sizeof(T), 1, f_Daybook);
      	if (r < 1) break;
-     	cout << setw(3) << setfill(' ') << right << "#" << setw(1) << "." << setw(3) << " | " <<  setw(24) << left << " Name:" <<  setw(3) << " | " << setw(20) << "Time of start:" <<  setw(3) << " | " << setw(15) << "Durability:" <<  setw(3) << " | " << setw(11) << "Priority:" << setw(3) << " | " << setw(9) << "Status:";
-      	line(2);
-      	Out1_short(T, k);
-		line(1);
+		Out1_short(T, k);
 		k++;
 	}
 	cout << "success!" << endl;
@@ -92,7 +91,6 @@ void DDayBook::Out1(Note T, int k)
 	cout<<"Details to note #"<<k+1<<":\t\t"<<T.text<<endl;
 	cout<<"Priority level:\t\t\t"<<prior[T.pr]<<endl;
 	cout<<"Duration:\t\t\t"<<T.duration<<endl;
-	//cout<<setw(100)<<setfill('0')<<endl;
 	cout<<"\nStatus:\t\t\t\t";
 	if (T.done == true)
 	{
@@ -126,8 +124,8 @@ void DDayBook::Out1(Note T, int k)
 	<<"."<<T.dl.year<<"\t"<<weekDays[T.addD.wDayOfWeek]<<endl;
 	SetConsoleTextAttribute(hConsole, 15);	
 			
-	tleft=(T.dl.month*30*24*60+T.dl.day*24*60+T.dl.hour*60+T.dl.min-
-	(lt.wMonth*30*24*60+lt.wDay*24*60+lt.wHour*60+lt.wMinute));
+	tleft=(T.dl.year*365*30*24*60+T.dl.month*30*24*60+T.dl.day*24*60+T.dl.hour*60+T.dl.min-
+	(lt.wYear*365*30*24*60+lt.wMonth*30*24*60+lt.wDay*24*60+lt.wHour*60+lt.wMinute));
 	d=tleft/60/24;
 	h=(tleft/60)%24;
 	hm = tleft%60;
@@ -157,18 +155,18 @@ int DDayBook::Add_new_mult()
 	line(1);
 	for(int i=0; i<quantity; i++)
 	{	
-		cout<<"Enter category:  ";
-		cin>>T.cg;
-		
-		cout<<"Enter name:  ";
-		cin>>T.name;
-	
 		cin.ignore();
+		printf("Enter category:  ");
+		gets(T.cg);
+		
+		printf("Enter name:  ");
+		gets(T.name);
+	
 		printf ("Enter the details:  ");
 		gets(T.text);
 
 		hour1:
-			cout<<"Enter starting time (hour:minute):  ";
+			cout<<"Enter starting time (hour minute):  ";
 			cin>>T.date1.hour>>T.date1.min;
 			if(T.date1.hour<0 || T.date1.hour>=24)
 			{
@@ -176,11 +174,11 @@ int DDayBook::Add_new_mult()
 				goto hour1;
 			}
 			if(T.date1.min<0 || T.date1.min>=60)
-				{
-					cout<<"The input is not correct... The hour has only 60 minutes(^-^)\nTry again:  ";
-					goto hour1;
-				}
-			cout<<"Enter starting date (day):  ";
+			{
+				cout<<"The input is not correct... The hour has only 60 minutes(^-^)\nTry again:  ";
+				goto hour1;
+			}
+			cout<<"Enter starting date (day month year):  ";
 		day1:
 			cin>>T.date1.day;
 			if (T.date1.day<1  || T.date1.day>31)
@@ -188,7 +186,6 @@ int DDayBook::Add_new_mult()
 				cout<<"The input is not correct... The month has only 31 days or less. \nPlease, try again:  ";
 				goto day1;
 			}
-			cout<<"Enter starting date (month):  ";
 		mon1:	
 			cin>>T.date1.month;
 			if (T.date1.month<1 || T.date1.month>12)
@@ -206,7 +203,6 @@ int DDayBook::Add_new_mult()
 				cout<<"You entered an unexisting date, try again.";
 				goto day1;
 			}
-			cout<<"Enter starting date (year):  ";
 		year1:
 			cin>>T.date1.year;
 			if (T.date1.year<2020)
@@ -215,7 +211,7 @@ int DDayBook::Add_new_mult()
 				goto year1;
 			}
 	
-			cout<<"Enter finishing time (hour):  ";
+			cout<<"Enter finishing time (hour minute):  ";
 		hour2:
 			cin>>T.date2.hour;
 			if(T.date2.hour<0 || T.date2.hour>=24)
@@ -223,7 +219,6 @@ int DDayBook::Add_new_mult()
 				cout<<"The input is not correct... The day has only 24 hours(^-^)\n Try again:  ";
 				goto hour2;
 			}
-			cout<<"Enter finishing time (minutes):  ";
 		min2:
 			cin>>T.date2.min;
 			if(T.date2.min<0 || T.date2.min>=60)
@@ -317,7 +312,7 @@ int DDayBook::Add_new_mult()
 		GetLocalTime(&T.addD);
 		cout<<"Current time:\t "<<T.addD.wHour<<":"<<T.addD.wMinute<<endl;
 		cout<<"Current date:\t"<<T.addD.wDay<<"."<<T.addD.wMonth<<"."<<T.addD.wYear<<endl;
-		cout<<"Do you want to add a deadline yourself? (else it will be the same as end time ;D)\nEnter 1 to add deadline by yourself:  ";
+		cout<<"Do you want to add a deadline yourself? ;D\nEnter 1 to add deadline by yourself or Enter 0 to set it as default (the finishing date) :  ";
 		cin>>dl;
 		cout<<endl;
 		if(dl==1)
@@ -438,9 +433,9 @@ void DDayBook::OutN1(Note No)
 void DDayBook::Out1_short(Note No, int a)
 {
 
-	cout << setw(3) << setfill(' ') << right << a << setw(1) << "." << setw(3) << " | " << setw(24) << left << No.name << setw(3) << " | " << right  << setfill('0')
-	<< setw(2) << No.date1.hour << setw(1) << ":" << setw(2) << No.date1.min << setw(4) << "  D: " << setw(2) << No.date1.day << setw(1) << "." << setw(2) << No.date1.month << setw(1) << "." << setw(2) << No.date1.year << setfill(' ')
-	<< setw(3) << " | " << setw(5) << setfill(' ') << " " << setw(4) << No.duration << setw(6) << setfill(' ') << " " << setw(3) << " | " << left << setw(11) << prior[No.pr] << setw(3) << " | " << left << setfill(' ');
+	cout << setw(3) << setfill(' ') << right << a << setw(1) << "." << setw(3) << " | " << setw(24) << left << No.name << setw(3) << " | ";
+	ShowDate(No);
+	cout << setw(3) << " | " << setw(5) << setfill(' ') << " " << setw(4) << No.duration << setw(6) << setfill(' ') << " " << setw(3) << " | " << left << setw(11) << prior[No.pr] << setw(3) << " | " << left << setfill(' ');
 	if (No.done == true)
 	{
 		SetConsoleTextAttribute(hConsole, 10);
@@ -452,8 +447,14 @@ void DDayBook::Out1_short(Note No, int a)
 		SetConsoleTextAttribute(hConsole, 12);
 		cout << setw(9) <<"Undone!";
 		SetConsoleTextAttribute(hConsole, 15);
-	}	
+	}
+	cout << endl;	
 	line(1);
+}
+
+void DDayBook::ShowDate(Note T)
+{
+	cout << right << setfill('0') << setw(2) << T.date1.hour << setw(1) << ":" << setw(2) << T.date1.min << setw(4) << "  D: " << setw(2) << T.date1.day << setw(1) << "." << setw(2) << T.date1.month << setw(1) << "." << setw(2) << T.date1.year << setfill(' ');
 }
 
 int DDayBook::search_menu()
