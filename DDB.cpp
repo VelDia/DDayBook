@@ -15,7 +15,7 @@ using namespace std;
 
 	const char* prior[5] = {"none","extreme","high","normal","low"};//����� ��� ������������� ������������ ���������� ���������, �� ������ ������������ �������� ������������
 	const char* weekDays[7] = { "Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};//�����, ��� �� ����� ��������� ���� ����� � ���� ������� ��� ����������� (��������) ���� 
-	const char* filename = "DDayBook.bin";
+	const char* filename = "files\\DDayBook.bin";
 	//int n;
 //	struct winsize size;
 //	GetConsoleScreenBufferInfo( _In_ HANDLE hConsoleOutput, _Out_ PCONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
@@ -1340,9 +1340,8 @@ while(1)
 void DDayBook::editAll(int e1)
 {
 	FILE *fEdit;
+	const char* editfile = "files\\fEdit_test.bin"; 
 	Note R;//the struct to replace with
-	/*int e;//the number of the task to edit
-	printf("Enter the nimber of the Task to edit:  ");*/
 	e1 -=1;
 	int i=0;
 	if ((f_Daybook = fopen(filename, "rb")) == NULL)
@@ -1350,7 +1349,7 @@ void DDayBook::editAll(int e1)
     	cout << "Error occurred while accessing the file \"DDayBook\"..." << endl;
     	return;
 	}
-	if ((fEdit = fopen("fEdit_test.bin", "ab+")) == NULL)
+	if ((fEdit = fopen(editfile, "ab+")) == NULL)
 	{
     	cout << "Error occurred while accessing the temporary file for Editing..." << endl;
     	return;
@@ -1663,14 +1662,13 @@ void DDayBook::editAll(int e1)
   	{
     	puts( "File successfully deleted" );
 	}
-	int result = rename("fEdit_test.bin", filename);
-	if (result == 0)
+	if (rename(editfile, filename) == 0)
 	{
 		printf("Successfully renamed!");
 	}
 	else 
 	{
-		printf("Error, could not rename the file.");
+		perror("Error, could not rename the file.");
 	}
 	system("pause");
 	system("cls");
