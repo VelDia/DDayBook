@@ -40,7 +40,7 @@ class DDayBook
 	int List();
 	void List_short();
 	void Out1(Note T, int k);
-	void ShowDate(Note T);
+	void ShowDate(Note T, int d);
 	int Add_new_mult();
 	int clear_file();
 	void OutN1(Note No);
@@ -62,6 +62,9 @@ class DDayBook
 	void CountDown();
 	void Out1_short(Note No, int a);
 	void MarkAsDone();
+	void oneMenu(int Task);
+	void editMenu(int e1);
+	void editAll(int e1);
 };
 
 #endif // DAYBOOK_H_INCLUDED

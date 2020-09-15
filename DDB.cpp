@@ -74,11 +74,22 @@ void DDayBook::List_short()
 	{
 		r=fread(&T, sizeof(T), 1, f_Daybook);
      	if (r < 1) break;
-		Out1_short(T, k);
+		Out1_short(T, k+1);
 		k++;
 	}
 	cout << "success!" << endl;
 	fclose(f_Daybook);	
+	cout << "Enter the number (#) of the tast to open its menu (or enter 0 to get back to the main menu): ";
+	int Task;
+	cin >> Task;
+	if (Task == 0)
+	{
+		return;
+	}
+	else
+	{
+		oneMenu(Task);
+	}
 }
 
 void DDayBook::Out1(Note T, int k)
@@ -434,7 +445,7 @@ void DDayBook::Out1_short(Note No, int a)
 {
 
 	cout << setw(3) << setfill(' ') << right << a << setw(1) << "." << setw(3) << " | " << setw(24) << left << No.name << setw(3) << " | ";
-	ShowDate(No);
+	ShowDate(No, 1);
 	cout << setw(3) << " | " << setw(5) << setfill(' ') << " " << setw(4) << No.duration << setw(6) << setfill(' ') << " " << setw(3) << " | " << left << setw(11) << prior[No.pr] << setw(3) << " | " << left << setfill(' ');
 	if (No.done == true)
 	{
@@ -452,9 +463,20 @@ void DDayBook::Out1_short(Note No, int a)
 	line(1);
 }
 
-void DDayBook::ShowDate(Note T)
+void DDayBook::ShowDate(Note T, int d)
 {
-	cout << right << setfill('0') << setw(2) << T.date1.hour << setw(1) << ":" << setw(2) << T.date1.min << setw(4) << "  D: " << setw(2) << T.date1.day << setw(1) << "." << setw(2) << T.date1.month << setw(1) << "." << setw(2) << T.date1.year << setfill(' ');
+	if (d == 1)
+	{
+		cout << right << setfill('0') << setw(2) << T.date1.hour << setw(1) << ":" << setw(2) << T.date1.min << setw(4) << "  D: " << setw(2) << T.date1.day << setw(1) << "." << setw(2) << T.date1.month << setw(1) << "." << setw(2) << T.date1.year << setfill(' ');
+	}
+	else if (d == 2)
+	{
+		cout << right << setfill('0') << setw(2) << T.date2.hour << setw(1) << ":" << setw(2) << T.date2.min << setw(4) << "  D: " << setw(2) << T.date2.day << setw(1) << "." << setw(2) << T.date2.month << setw(1) << "." << setw(2) << T.date2.year << setfill(' ');
+	}
+	else if (d == 3)
+	{
+		cout << right << setfill('0') << setw(2) << T.dl.hour << setw(1) << ":" << setw(2) << T.dl.min << setw(4) << "  D: " << setw(2) << T.dl.day << setw(1) << "." << setw(2) << T.dl.month << setw(1) << "." << setw(2) << T.dl.year << setfill(' ');
+	}
 }
 
 int DDayBook::search_menu()
@@ -946,15 +968,10 @@ void DDayBook::sort_dl6()
 							e[j]=e[k];
 							e[k]=srt;
 						}
-					}
-					
-				}
-				
-			}
-				
-		}
-
-						
+					}	
+				}	
+			}		
+		}						
 	}
 	cout<<"Sorting was successful..."<<endl;
 	CountDown();
@@ -1068,7 +1085,9 @@ void DDayBook::del_one()
 				}
 			}
         	else
-        	fwrite(&T, sizeof(T), 1, f_del1);
+        	{
+			  	fwrite(&T, sizeof(T), 1, f_del1);
+			}
 		}
 		fclose(f_Daybook);
 		fclose(f_del1);
@@ -1078,40 +1097,39 @@ void DDayBook::del_one()
 		Sleep(300);
 		return;
 	}
-	return;
 }
 
 void DDayBook::main_menu()
 {
 	cout << "Welcome to the program \"DDayBook\"! In future versions here you`ll be able to read a quote and see your progress at all and certainly today (how many tasks are already done comparing to those left)." << endl;
 	while (1)
-	{
+{
 
-	int sw=0;//����� ��� ������ ������ ����	
+	int m;//����� ��� ������ ������ ����	
 	line(1);
 	GetLocalTime(&lt);//�������, ��� ������� ���� ��� ��� �� ����'���� 		
 	cout<<"\n\t\t\t\t\t\t\t\t\tYour date is "<<lt.wDay<<"."<<lt.wMonth<<"."<<lt.wYear<<endl; 
 	cout<<"\t\t\t\t\t\t\t\t\tToday is "<<weekDays[lt.wDayOfWeek]<<endl;
 	cout<<"\t\t\t\t\t\t\t\t\tYour time is "<<lt.wHour<<":"<<lt.wMinute<<endl;
 	Sleep(300);
-	Beep(783.99, 100);//������� � �������� Windows.h ��� ���������� ��������� �������
-	cout<<"You`re in the main menu. Please, choose the option from the list: \n";
-	cout<<"1. Show all tasks \n";//������� ��, �������� � ����, �������� ���������
-	cout<<"2. Add new tasks \n";//������ ����� ����� ������
-	cout<<"3. Search a task \n";//������� � ���� ������ �������� ���������
-	cout<<"4. Show tasks for today \n";
-	cout<<"5. Sort all tasks \n";//������� � ���� ����������
-	cout<<"6. Delete a task \n";
-	cout<<"7. Delete all tasks \n";
+	//Beep(783.99, 100);//������� � �������� Windows.h ��� ���������� ��������� �������
+	cout << "You`re in the main menu. Please, choose the option from the list: \n";
+	cout << "1. Show all tasks \n";//������� ��, �������� � ����, �������� ���������
+	cout << "2. Add new tasks \n";//������ ����� ����� ������
+	cout << "3. Search a task \n";//������� � ���� ������ �������� ���������
+	cout << "4. Show tasks for today \n";
+	cout << "5. Sort all tasks \n";//������� � ���� ����������
+	cout << "6. Delete a task \n";
+	cout << "7. Delete all tasks \n";
 	cout << "8. The quote of the day \n";
-	cout << "40. Cheaking short out \n";
-	cout<<"0. Leave the program \n";//����� � ��������
-	cout<<"Enter the number of the action:  ";
-	cin>>sw;
+	cout << "11. Cheaking short out \n";
+	cout << "0. Leave the program \n";//����� � ��������
+	cout << "Enter the number of the action:  ";
+	cin >> m;
 	line(2);
 
 	system ("cls");
-	switch (sw)
+	switch (m)
 	{	case 1:
 			List();
 		break;
@@ -1141,7 +1159,7 @@ void DDayBook::main_menu()
 			SetConsoleTextAttribute(hConsole, 15);
 			system("pause");
 		return;
-		case 40:
+		case 11:
 			List_short();
 		break;
 		default:
@@ -1222,6 +1240,440 @@ void DDayBook::MarkAsDone()
 		}
 	}
 	fclose(f_Daybook);
+	return;
+}
+
+void DDayBook::oneMenu(int Task)
+{
+	int m;
+	cout << "The menu of the task:\n";
+	cout << "1. Edit.\n";
+	cout << "2. Delete.\n";
+	cout << "3. Go back to the list.\n";
+	cout << "0. Go back to the main menu.\n";
+	cout << "Enter the # of the action:  ";
+	cin>>m;
+	system("cls");
+	
+	switch(m)
+	{
+		case 1:
+			editMenu(Task);
+		break;
+		case 2:
+			del_one();
+		break;
+		case 3:
+			List_short();
+		break;
+		case 0:
+			return;
+		break;
+		default:
+			cout<<"You`ve entered wrong character, so you`ll be transfered to the List";
+			Sleep(300);
+		return;
+	}
+}
+
+void DDayBook::editMenu(int e1)
+{
+	int m;
+while(1)
+{
+	cout<<"You`re in the editing menu:\n";
+	cout<<"What do you want to change?(choose one, you`ll have other options later)\n";
+	cout<<"1. Change everything.\n";
+	cout<<"2. Category.\n";
+	cout<<"3. Name.\n";
+	cout<<"4. Details.\n";
+	cout<<"5. Date of the start.\n";
+	cout<<"6. Date of the finish.\n";
+	cout<<"7. Deadline.\n";
+	cout<<"8. Priority.\n";
+	cout<<"9. Mark as done.\n";
+	cout<<"0. Go back to the main menu.\n";
+	cout<<"Enter the # of the menu:  ";
+	cin >> m;
+	system("cls");
+	
+	switch(m)
+	{
+		case 1:
+			editAll(e1);
+		break;
+		case 2:
+			
+		break;
+		case 3:
+			
+		break;
+		case 4:
+			
+		break;
+		case 5:
+			
+		break;
+		case 6:
+			
+		break;
+		case 7:
+			
+		break;
+		case 8:
+			
+		break;
+		case 9:
+			
+		break;
+		case 0:
+			return;
+		//break;
+		default:
+			cout<<"You`ve entered wrong number of the menu.\nTry again.\n";
+		return;	
+	}
+	
+}
+}
+
+void DDayBook::editAll(int e1)
+{
+	FILE *fEdit;
+	Note R;//the struct to replace with
+	/*int e;//the number of the task to edit
+	printf("Enter the nimber of the Task to edit:  ");*/
+	e1 -=1;
+	int i=0;
+	if ((f_Daybook = fopen(filename, "rb")) == NULL)
+	{
+    	cout << "Error occurred while accessing the file \"DDayBook\"..." << endl;
+    	return;
+	}
+	if ((fEdit = fopen("fEdit_test.bin", "ab+")) == NULL)
+	{
+    	cout << "Error occurred while accessing the temporary file for Editing..." << endl;
+    	return;
+	}
+	fseek(f_Daybook, 0, 0);
+	fseek(fEdit, 0, 0);
+	while (!feof(f_Daybook)) 
+	{
+		int r;
+		r = fread(&T, sizeof(T), 1, f_Daybook);
+        if (r < 1) break;
+    	if (e1 == i)
+    	{
+			Out1(T, e1);
+			
+			change:
+				
+			cout << "Now the data about the task will be changed, you cannot undo this action.\nDo you want to continue? (y/n) ";
+			char c[2];
+			cin >> c;
+			if(strcmpi(c,"y") == 0)
+			{
+				cin.ignore();
+				cout << "The category was: " << T.cg << endl;
+				printf("Enter new/edited category:  ");
+				gets(T.cg);
+				
+				cout << "The name was: " << T.name << endl;
+				printf("Enter new/edited name:  ");
+				gets(T.name);
+				
+				cout << "The details were: " << T.text << endl;
+				printf ("Enter new/edited the details:  ");
+				gets(T.text);
+				
+				cout << "The starting time was: ";
+				ShowDate(T, 1);
+				cout << endl;
+			edhour1:		
+				cout << "Enter new/edited starting time (hour minute):  ";
+				cin >> T.date1.hour >> T.date1.min;
+				if (T.date1.hour<0 || T.date1.hour>=24)
+				{
+					cout << "The input is not correct... The day has only 24 hours(^-^)\n Try again:  ";
+					goto edhour1;
+				}
+				if (T.date1.min<0 || T.date1.min>=60)
+				{
+					cout << "The input is not correct... The hour has only 60 minutes(^-^)\nTry again:  ";
+					goto edhour1;
+				}
+				cout << "Enter starting date (day month year):  ";
+			edday1:
+				cin >> T.date1.day;
+				if (T.date1.day<1  || T.date1.day>31)
+				{	
+					cout << "The input is not correct... The month has only 31 days or less. \nPlease, try again:  ";
+					goto edday1;
+				}
+			edmon1:	
+				cin >> T.date1.month;
+				if (T.date1.month < 1 || T.date1.month > 12)
+				{	
+					cout<<"Wrong character, try again(enter month):  ";
+					goto edmon1;
+				}
+				if (T.date1.month == 2 && (T.date1.day == 30 || T.date1.day == 31 ))
+				{	
+					cout<<"You entered an unexisting date, try again.";
+					goto edday1;
+				}
+					if ((T.date1.month == 4 || T.date1.month == 6 || T.date1.month == 9 || T.date1.month == 11 ) && T.date1.day == 31 )
+				{	
+					cout<<"You entered an unexisting date, try again.";
+					goto edday1;
+				}
+			edyear1:
+				cin >> T.date1.year;
+				if (T.date1.year < lt.wYear)
+				{
+					cout << "You entered strange year\nTry again:  ";
+					goto edyear1;
+				}
+				
+				cout << "The time of finishing was: ";
+				ShowDate(T, 2);
+				cout << endl;
+				cout << "Enter finishing time (hour minute):  ";
+			edhour2:
+				cin >> T.date2.hour;
+				if (T.date2.hour < 0 || T.date2.hour >= 24)
+				{
+					cout << "The input is not correct... The day has only 24 hours(^-^)\n Try again:  ";
+					goto edhour2;
+				}
+			edmin2:
+				cin >> T.date2.min;
+				if (T.date2.min<0 || T.date2.min>=60)
+				{
+					cout << "The input is not correct... The hour has only 60 minutes(^-^)\nTry again:  ";
+					goto edmin2;
+				}
+				cout << "Enter finishing date (day month year):  ";
+			edday2:
+				cin >> T.date2.day;
+				if (T.date2.day<1  || T.date2.day>31)
+				{	
+					cout << "The input is not correct... The month has only 31 days or less. \nPlease, try again:  ";
+					goto edday2;
+				}
+			edmon2:	
+				cin >> T.date2.month;
+				if (T.date2.month<1 || T.date2.month>12)
+				{	
+					cout << "Wrong character, try again:  ";
+					goto edmon2;
+				}
+				if (T.date2.month == 2 && (T.date2.day == 30 || T.date2.day == 31 ))
+				{	
+					cout << "You entered an unexisting date, try again.";
+					goto edday2;
+				}
+				if ((T.date2.month == 4 || T.date2.month == 6 || T.date2.month == 9 || T.date2.month == 11 ) && T.date2.day == 31 )
+				{	
+					cout << "You entered an unexisting date, try again.";
+					goto edday2;
+				}
+			edyear2:
+				cin >> T.date2.year;
+				if (T.date2.year < 2020)
+				{
+					cout << "You entered strange year\nTry again:  ";
+					goto edyear2;
+				}
+				if (T.date2.year < T.date1.year)
+				{
+					cout << "The end date is unrealistic, you cannot finish the work, before starting it (>.<)\nTry again:";
+					goto edhour2;
+				}
+				else 
+				{
+					if (T.date2.year == T.date1.year)
+					{
+						if (T.date2.month < T.date1.month)
+						{
+							cout << "The end date is unrealistic, you cannot finish the work, before starting it (>.<)\nTry again:";
+							goto edhour2;
+						}
+						else
+						{
+							if (T.date2.month == T.date1.month)
+							{
+								if (T.date2.day < T.date1.day)
+								{
+									cout << "The end date is unrealistic, you cannot finish the work, before starting it (>.<)\nTry again:";
+									goto edhour2;
+								}
+								else
+								{
+									if (T.date2.day == T.date1.day)
+									{
+										if (T.date2.hour < T.date1.hour)
+										{
+											cout << "The end date is unrealistic, you cannot finish the work, before starting it (>.<)\nTry again:";
+											goto edhour2;
+										}
+									}
+									else
+									{
+										if(T.date2.hour == T.date1.hour)
+										{
+											if (T.date2.min == T.date1.min)
+											{
+											cout << "The end date is unrealistic, you cannot finish the work, before starting it (>.<)\nTry again:";
+											goto edhour2;
+											}	
+										}
+									}	
+								}
+							}
+						}
+					}
+				}
+				GetLocalTime(&T.addD);
+				cout << "Current time:\t " << T.addD.wHour << ":" << T.addD.wMinute << endl;
+				cout << "Current date:\t" << T.addD.wDay << "." << T.addD.wMonth << "." << T.addD.wYear << endl;
+				
+				cout << "The previous deadline was: ";
+				ShowDate(T, 3);
+				cout << endl;
+				cout << "Do you want to add a deadline yourself? ;D\nEnter 1 to add deadline by yourself or Enter 0 to set it as default (the finishing date) :  ";
+				int dl;
+				cin >> dl;
+				cout << endl;
+				if(dl == 1)
+				{
+					cout << "Final deadline time (hour minute):\n";
+				edlhour:
+					cin >> T.dl.hour;
+					if (T.dl.hour < 0 || T.dl.hour >= 24)
+					{
+						cout << "The input is not correct... The day has only 24 hours(^-^)\n Try again:  ";
+						goto edlhour;
+					}
+				edlmin:
+					cin >> T.dl.min;
+					if (T.dl.min < 0 || T.dl.min >= 60)
+					{
+						cout << "The input is not correct... The hour has only 60 minutes(^-^)\nTry again:  ";
+						goto edlmin;
+					}
+					cout << "\tEnter deadline date (day month year):  ";
+				edlday:
+					cin >> T.dl.day;
+					if (T.dl.day < 1  || T.dl.day > 31)
+					{	
+						cout << "The input is incorrect... The month has only 31 days or less. \nPlease, try again:  ";
+						goto edlday;
+					}
+				edlmon:	
+					cin >> T.dl.month;
+					if (T.dl.month < 1 || T.dl.month > 12)
+					{	
+						cout << "You entered an unexisting date, try again:  ";
+						goto edlmon;
+					}
+					if (T.dl.month == 2 && (T.dl.day == 30 || T.dl.day == 31 ))
+					{	
+						cout << "You entered an unexisting date, try again: ";
+						goto edlday;
+					}
+					if ((T.dl.month == 4 || T.dl.month == 6 || T.dl.month == 9 || T.dl.month == 11 ) && T.dl.day == 31 )
+					{	
+						cout << "You entered an unexisting date, try again: ";
+						goto edlday;
+					}
+				edlyear:
+					cin >> T.dl.year;
+					if (T.dl.year < 2020)
+					{
+						cout << "You entered strange year\nTry again:  ";
+						goto edlyear;
+					}
+				}
+				else
+				{
+					T.dl = T.date2;
+					cout << "Finish till:  ";
+					ShowDate(T, 3);
+					cout << endl;	
+				}
+			edpr:	
+				cout << "Choose the priority (enter the number):" << endl
+				<< "(1.extreme, \n2.high, \n3.normal, \n4.low.)\nThe priority # ";
+				cin >> T.pr;
+				if (T.pr < 0 || T.pr > 4 || T.pr != 0 && T.pr != 1 && T.pr != 2 && T.pr != 3 && T.pr != 4)
+				{
+					cout << "The entered priority # was not defined. Please, follow the instructions (._.)\n";
+					goto edpr;
+				}
+ 	
+				T.duration = (T.date2.month*30*24*60 + T.date2.day*24*60 + T.date2.hour*60 + T.date2.min - (T.date1.month*30*24*60 + T.date1.day*24*60 + T.date1.hour*60 + T.date1.min));
+				cout << "The duration (in minutes) of your task is:  " << T.duration << endl;
+				cout << "The duration (in hours) of your task is:  " << T.duration/60 << endl;
+				
+			edmark:
+				cout << "Do you want to mark the task as done? (y/n) ";
+				char MarkAsDone[2];
+				cin >> MarkAsDone;
+				if (strcmpi(MarkAsDone, "y") == 0)
+				{
+					T.done = true;
+					cout << "Status: Done.\n";
+				}
+				else if (strcmpi(MarkAsDone, "n") == 0)
+				{
+					T.done = false;
+					cout << "Status: To be done.\n";
+				}
+				else
+				{
+					cout << "You`ve entered wrong character, try again:\n ";
+					goto edmark;
+				}
+				fwrite(&T, sizeof(T), 1, fEdit);	
+			}
+			else if (strcmpi(c,"n") == 0)
+			{
+				cout << "The task won`t be edited.\n";
+			}
+			else
+			{
+				cout << "You`ve entered wrong character, try again:\n ";
+				goto change;
+			}		
+		}
+		else if (e1 != i)
+		{
+			fwrite(&T, sizeof(T), 1, fEdit);
+		}
+		i++;
+	}
+	fclose(f_Daybook);
+	fclose(f_del1);
+	if( remove(filename) != 0 )
+	{
+    	perror( "Error deleting file" );
+	}
+  	else
+  	{
+    	puts( "File successfully deleted" );
+	}
+	int result = rename("fEdit_test.bin", filename);
+	if (result == 0)
+	{
+		printf("Successfully renamed!");
+	}
+	else 
+	{
+		printf("Error, could not rename the file.");
+	}
+	system("pause");
+	system("cls");
 	return;
 }
 
