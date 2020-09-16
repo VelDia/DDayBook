@@ -15,7 +15,7 @@ using namespace std;
 
 	const char* prior[5] = {"none","extreme","high","normal","low"};//����� ��� ������������� ������������ ���������� ���������, �� ������ ������������ �������� ������������
 	const char* weekDays[7] = { "Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};//�����, ��� �� ����� ��������� ���� ����� � ���� ������� ��� ����������� (��������) ���� 
-	const char* filename = "files\\DDayBook.bin";
+	const char* filename = "DDayBook.bin";
 	//int n;
 //	struct winsize size;
 //	GetConsoleScreenBufferInfo( _In_ HANDLE hConsoleOutput, _Out_ PCONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
@@ -154,7 +154,7 @@ void DDayBook::Out1(Note T, int k)
 
 int DDayBook::Add_new_mult()
 {	
-	if((f_Daybook=fopen(filename, "ab+")) == NULL)
+	if ((f_Daybook = fopen(filename, "ab+")) == NULL)
 	{
 	    cout << "Error occurred while accessing the text file..." << endl;
     	return 1;
@@ -1340,7 +1340,7 @@ while(1)
 void DDayBook::editAll(int e1)
 {
 	FILE *fEdit;
-	const char* editfile = "files\\fEdit_test.bin"; 
+	const char* editfile = "fEdit_test.bin"; 
 	Note R;//the struct to replace with
 	e1 -=1;
 	int i=0;
